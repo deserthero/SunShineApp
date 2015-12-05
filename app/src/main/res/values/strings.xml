@@ -1,0 +1,8 @@
+<resources>
+    <string name="OPEN_WEATHER_MAP_API_KEY" translatable="false" ></string>
+    <string name="app_name">SunShine2</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_refresh">Refresh</string>
+
+</resources>
