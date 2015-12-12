@@ -1,7 +1,10 @@
 package com.deserthero.sunshine2;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,8 +14,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.deserthero.sunshine2.BLL.JSONHelper;
 import com.deserthero.sunshine2.BLL.NetworkHelper;
@@ -31,11 +36,16 @@ import java.util.List;
 public class MainActivityFragment extends Fragment {
 
     ArrayAdapter<String> mForecastAdapter;
-    String postalCode = "95043";
+    SharedPreferences Prefs;
+    String postalCode;
+    String unitType;
 
 
     public MainActivityFragment() {
+
+
     }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,24 +53,22 @@ public class MainActivityFragment extends Fragment {
         setHasOptionsMenu(true);
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
 
+
         // Create some dummy data for the ListView.  Here's a sample weekly forecast
 
-        // Here to update UI ones it created with a real data.
-        AsyncTask weatherData = new FetchWeatherTask().execute(postalCode);
-
         String[] data = {
-                "lol",
-                "Tue 6/24 - Foggy - 21/8",
-                "Wed 6/25 - Cloudy - 22/17",
-                "Thurs 6/26 - Rainy - 18/11",
-                "Fri 6/27 - Foggy - 21/10",
-                "Sat 6/28 - TRAPPED IN WEATHERSTATION - 23/18",
-                "Sun 6/29 - Sunny - 20/7"
+                " ",
+                " ",
+                " ",
+                " ",
+                " ",
+                " "
         };
 
 
@@ -84,7 +92,37 @@ public class MainActivityFragment extends Fragment {
         ListView listView = (ListView) rootView.findViewById(R.id.listview_forecast);
         listView.setAdapter(mForecastAdapter);
 
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String forecast = mForecastAdapter.getItem(position);
+                Intent i = new Intent(getActivity(),DetailActivity.class)
+                        .putExtra(Intent.EXTRA_TEXT,forecast);
+                startActivity(i);
+               // Toast.makeText(getActivity(),forecast,Toast.LENGTH_LONG).show();
+
+            }
+        });
         return rootView;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // If you try to define context in ctr it will send null
+        Prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
+        // Get all prefs values
+        postalCode = Prefs.getString(getString(R.string.pref_location_key),getString(R.string.pref_location_default));
+        unitType = Prefs.getString(
+                getString(R.string.pref_Temp_Unit_key),
+                getString(R.string.pref_units_metric));
+
+
+        // Here to update UI ones it created with a real data.
+        new FetchWeatherTask().execute(postalCode);
+
     }
 
     @Override
@@ -151,7 +189,7 @@ public class MainActivityFragment extends Fragment {
             JSONHelper jh = new JSONHelper();
 
             try {
-                return jh.getWeatherDataFromJson(forecastJsonStr, numDays);
+                return jh.getWeatherDataFromJson(getActivity(),forecastJsonStr, numDays, unitType);
             } catch (JSONException e) {
                 return null;
             }

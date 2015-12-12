@@ -4,5 +4,35 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="action_refresh">Refresh</string>
+    <string name="title_activity_detail">DetailActivity</string>
+    <string name="title_Settings_Activity">Settings</string>
+
+    <!-- Preferances Location Label -->
+    <string name="pref_location_label">Location</string>
+
+    <!-- Preferances Location Key -->
+    <string name="pref_location_key" translatable="false" >locationKey</string>
+    <!-- Preferances Location default -->
+    <string name="pref_location_default" translatable="false" >11411</string>
+
+    <!-- Preferances Temprature Unit Label -->
+    <string name="pref_Temp_Unit_label">Pick your Units</string>
+
+    <!-- Preferances Metric Unit Label -->
+    <string name="pref_units_label_metric">metric</string>
+
+    <!-- Preferances Imperial Unit Label -->
+    <string name="pref_units_label_imperial">imperial</string>
+
+    <!-- Preferances Temprature Unit Key -->
+    <string name="pref_Temp_Unit_key" translatable="false">unitsKey</string>
+
+    <!-- Value in SharedPreferences for metric temperature unit option [CHAR LIMIT=NONE] -->
+    <string name="pref_units_metric" translatable="false">metric</string>
+
+    <!-- Value in SharedPreferences for imperial temperature unit option [CHAR LIMIT=NONE] -->
+    <string name="pref_units_imperial" translatable="false">imperial</string>
+
+
 
 </resources>

@@ -1,7 +1,10 @@
 package com.deserthero.sunshine2.BLL;
 
+import android.content.Context;
 import android.text.format.Time;
 import android.util.Log;
+
+import com.deserthero.sunshine2.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,7 +25,16 @@ public class JSONHelper {
     /**
      * Prepare the weather high/lows for presentation.
      */
-    private String formatHighLows(double high, double low) {
+    // I add here a context as a parameter in order to use getString();
+    private String formatHighLows(Context context, double high, double low, String unitType) {
+
+        if (unitType.equals(context.getString(R.string.pref_units_imperial))) {
+            high = (high * 1.8) + 32;
+            low = (low * 1.8) + 32;
+        } else if (!unitType.equals(context.getString(R.string.pref_units_metric))) {
+            Log.d(context.getPackageName().toString(), "Unit type not found: " + unitType);
+        }
+
         // For presentation, assume the user doesn't care about tenths of a degree.
         long roundedHigh = Math.round(high);
         long roundedLow = Math.round(low);
@@ -41,7 +53,7 @@ public class JSONHelper {
      */
 
      // Have an issue with Time i will solve it later
-    public String[] getWeatherDataFromJson(String forecastJsonStr, int numDays)
+    public String[] getWeatherDataFromJson(Context context, String forecastJsonStr, int numDays, String unitsType)
             throws JSONException {
 
         // These are the names of the JSON objects that need to be extracted.
@@ -99,7 +111,7 @@ public class JSONHelper {
             double high = temperatureObject.getDouble(OWM_MAX);
             double low = temperatureObject.getDouble(OWM_MIN);
 
-            highAndLow = formatHighLows(high, low);
+            highAndLow = formatHighLows(context, high, low, unitsType);
             resultStrs[i] = day + " - " + description + " - " + highAndLow;
         }
 
