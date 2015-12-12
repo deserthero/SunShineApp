@@ -139,10 +139,30 @@ public class MainActivityFragment extends Fragment {
             FetchWeatherTask weatherTask = new FetchWeatherTask();
             weatherTask.execute(postalCode);
             return true;
+        }else if (id == R.id.action_showmap)
+        {
+            ShowLocationOnMap(postalCode);
+
         }
         return super.onOptionsItemSelected(item);
     }
 
+    private void ShowLocationOnMap(String postalCode)
+    {
+        // Using the URI scheme for showing a location found on a map.  This super-handy
+        // intent can is detailed in the "Common Intents" page of Android's developer site:
+        // http://developer.android.com/guide/components/intents-common.html#Maps
+        Uri geoLocation = Uri.parse("geo:0,0?").buildUpon()
+                .appendQueryParameter("q", postalCode)
+                .build();
+
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(geoLocation);
+        if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+            startActivity(intent);
+        }
+
+    }
 
     public class FetchWeatherTask extends AsyncTask<String, Void, String[]> {
 
